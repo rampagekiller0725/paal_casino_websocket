@@ -16,6 +16,9 @@ function uuidv4() {
     });
 }
 
+app.get("/test", (req, res) => {
+    res.send({status: 'success'});
+})
 function getRandomInt(min, max, avoidIndexArray) {
     min = Math.ceil(min);
     max = Math.floor(max);
