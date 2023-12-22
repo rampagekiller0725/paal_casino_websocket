@@ -189,6 +189,19 @@ function blackjack(ws, receivedData) {
     }
 }
 
+function baccarat(ws, receivedData) {
+    switch (receivedData.instruction) {
+        case 'start_game':
+            setTimeout(() => {
+                sendData(ws.id, {
+                    type: 'baccarat',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
+            }, 5000);
+            break;
+    }
+}
 function start() {
 
     wss.on('connection', (ws) => {
@@ -203,6 +216,9 @@ function start() {
             switch (receivedData.type) {
                 case 'blackjack':
                     blackjack(ws, receivedData);
+                    break;
+                case 'baccarat':
+                    baccarat(ws, receivedData);
                     break;
             }
             // wss.clients.forEach(function each(client) {
@@ -239,3 +255,5 @@ app.listen(4000, () => {
     console.log('running on port 4000');
     start();
 })
+
+module.exports = app;
