@@ -9,11 +9,8 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
         origin: "*",
-        credentials: true,
-        methods: ['GET', "POST"],
     },
 });
-// io?.AsyncServer(async_mode='aiohttp', cors_allowed_origins='*')
 
 var cnt = 0;
 
