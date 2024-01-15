@@ -7,9 +7,10 @@ const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
-    transports: ['polling', 'websocket', 'webtransport'],
     cors: {
-        origin: ["https://paal-casino-websocket.vercel.app/"],
+        origin: "*",
+        credentials: true,
+        methods: ['GET', "POST"],
     },
 });
 // io?.AsyncServer(async_mode='aiohttp', cors_allowed_origins='*')
