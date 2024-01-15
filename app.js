@@ -8,12 +8,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server, {
     cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-        transports: ['websocket', 'polling'],
-        credentials: true
+        origin: "https://paal-casino-websocket.vercel.app/",
     },
-    allowEIO3: true
 });
 // io?.AsyncServer(async_mode='aiohttp', cors_allowed_origins='*')
 
