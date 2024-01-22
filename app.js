@@ -242,6 +242,77 @@ function baccarat(ws, receivedData) {
             break;
     }
 }
+
+function roulette(ws, receivedData) {
+    switch (receivedData.instruction) {
+        case 'start_game':
+            setTimeout(() => {
+                sendData(ws.id, {
+                    type: 'roulette',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
+            }, 5000);
+            break;
+    }
+}
+
+function paigow(ws, receivedData) {
+    switch (receivedData.instruction) {
+        case 'start_game':
+            setTimeout(() => {
+                sendData(ws.id, {
+                    type: 'paigow',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
+            }, 5000);
+            break;
+    }
+}
+
+function letitride(ws, receivedData) {
+    switch (receivedData.instruction) {
+        case 'start_game':
+            setTimeout(() => {
+                sendData(ws.id, {
+                    type: 'letitride',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
+            }, 5000);
+            break;
+    }
+}
+
+function threecardpoker(ws, receivedData) {
+    switch (receivedData.instruction) {
+        case 'start_game':
+            setTimeout(() => {
+                sendData(ws.id, {
+                    type: 'threecardpoker',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
+            }, 5000);
+            break;
+    }
+}
+
+function ultimatetexasholdem(ws, receivedData) {
+    switch (receivedData.instruction) {
+        case 'start_game':
+            setTimeout(() => {
+                sendData(ws.id, {
+                    type: 'ultimatetexasholdem',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
+            }, 5000);
+            break;
+    }
+}
+
 function start() {
     io.on('connection', (socket) => {
         wsIds.push(socket.id);
@@ -255,6 +326,21 @@ function start() {
                     break;
                 case 'baccarat':
                     baccarat(socket, receivedData);
+                    break;
+                case 'roulette':
+                    roulette(socket, receivedData);
+                    break;
+                case 'paigow':
+                    paigow(socket, receivedData);
+                    break;
+                case 'letitride':
+                    letitride(socket, receivedData);
+                    break;
+                case 'threecardpoker':
+                    threecardpoker(socket, receivedData);
+                    break;
+                case 'ultimatetexasholdem':
+                    ultimatetexasholdem(socket, receivedData);
                     break;
             }
         })
