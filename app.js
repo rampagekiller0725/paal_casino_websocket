@@ -49,144 +49,16 @@ function sendData(wsId, data) {
 }
 
 function blackjack(ws, receivedData) {
-    let room;
-    let playerCardIndexes1 = [], playerCardIndexes2 = [], dealerCardIndexes = [];
-    switch(receivedData.instruction) {
-        case 'fetch_room':
-            sendBroadCast('blackjack');
-            break;
-        case 'create_room':
-            rooms['blackjack'].push({
-                id: ws.id,
-                name: receivedData.name,
-                connectedPlayers: [{id: ws.id, playerType: 'Dealer'}]
-            });
-            sendData(ws.id, {
-                type: 'blackjack',
-                instruction: 'create_room',
-                id: ws.id
-            });
-            sendBroadCast('blackjack');
-            break;
-        case 'join_room':
-            room = rooms['blackjack'].find((room) => room.id === receivedData.roomId);
-            room.connectedPlayers.push({id: ws.id, playerType: 'Player'});
-            sendBroadCast('blackjack');
+    switch (receivedData.instruction) {
+        case 'start_game':
             setTimeout(() => {
-                if (room.connectedPlayers.length === 2) {
-                    room.connectedPlayers.map((player) => {
-                        sendData(player.id, {
-                            type: 'blackjack',
-                            instruction: 'start_room',
-                            roomId: room.id,
-                            player: player,
-                        })
-                    })
-                }
+                sendData(ws.id, {
+                    type: 'blackjack',
+                    instruction: 'start_game',
+                    playerId: ws.id,
+                });
             }, 5000);
             break;
-        case 'deal_ended':
-            room = rooms['blackjack'].find((room) => room.id === receivedData.roomId);
-            playerCardIndexes1.push(getRandomInt(0, 51, []));
-            playerCardIndexes1.push(getRandomInt(0, 51, playerCardIndexes1));
-            dealerCardIndexes.push(getRandomInt(0, 51, playerCardIndexes1));
-            dealerCardIndexes.push(getRandomInt(0, 51, dealerCardIndexes.concat(playerCardIndexes1).concat(playerCardIndexes2)));
-
-            console.log(room.connectedPlayers);
-            room.connectedPlayers.map((player) => {
-                sendData(player.id, {
-                    type: 'blackjack',
-                    instruction: 'deal_ended',
-                    roomId: room.id,
-                    dealedChipTypes: receivedData.dealedChipTypes,
-                    dealedTotalAmount: receivedData.dealedTotalAmount,
-                    playerCardIndexes1: playerCardIndexes1,
-                    playerCardIndexes2: playerCardIndexes2,
-                    dealerCardIndexes: dealerCardIndexes,
-                })
-            })
-            break;
-        case 'hit':
-            room = rooms['blackjack'].find((room) => room.id === receivedData.roomId);
-            dealerCardIndexes = receivedData.dealerCardIndexes;
-            playerCardIndexes1 = receivedData.playerCardIndexes1;
-            playerCardIndexes2 = receivedData.playerCardIndexes2;
-            room.connectedPlayers.map((player) => {
-                if (player.id === receivedData.playerId) {
-                    console.log(player.playerType);
-                    if (player.playerType === "Dealer") dealerCardIndexes.push(getRandomInt(0, 51, dealerCardIndexes.concat(playerCardIndexes1).concat(playerCardIndexes2)));
-                    else if (player.playerType === "Player") {
-                        if (receivedData.playerCardsIndex === 1) playerCardIndexes1.push(getRandomInt(0, 51, dealerCardIndexes.concat(playerCardIndexes1).concat(playerCardIndexes2)));
-                        else if (receivedData.playerCardsIndex === 2) playerCardIndexes2.push(getRandomInt(0, 51, dealerCardIndexes.concat(playerCardIndexes1).concat(playerCardIndexes2)));
-                    }
-                }
-            });
-            room.connectedPlayers.map((player) => {
-                sendData(player.id, {
-                    type: 'blackjack',
-                    instruction: 'hit',
-                    roomId: room.id,
-                    player: player,
-                    playerCardIndexes1: playerCardIndexes1,
-                    playerCardIndexes2: playerCardIndexes2,
-                    dealerCardIndexes: dealerCardIndexes,
-                })
-            })
-            break;
-        case 'stand':
-            room = rooms['blackjack'].find((room) => room.id === receivedData.roomId);
-            dealerCardIndexes = receivedData.dealerCardIndexes;
-            playerCardIndexes1 = receivedData.playerCardIndexes1;
-            playerCardIndexes2 = receivedData.playerCardIndexes2;
-            room.connectedPlayers.map((player) => {
-                sendData(player.id, {
-                    type: 'blackjack',
-                    instruction: 'stand',
-                    roomId: room.id,
-                    player: player,
-                    playerCardIndexes1: playerCardIndexes1,
-                    playerCardIndexes2: playerCardIndexes2,
-                    dealerCardIndexes: dealerCardIndexes,
-                    playerCardsIndex: receivedData.playerCardsIndex
-                })
-            })
-            break;
-        case 'insure':
-            room = rooms['blackjack'].find((room) => room.id === receivedData.roomId);
-            dealerCardIndexes = receivedData.dealerCardIndexes;
-            playerCardIndexes1 = receivedData.playerCardIndexes1;
-            playerCardIndexes2 = receivedData.playerCardIndexes2;
-            room.connectedPlayers.map((player) => {
-                sendData(player.id, {
-                    type: 'blackjack',
-                    instruction: 'insure',
-                    roomId: room.id, 
-                    player: player,
-                    playerCardIndexes1: playerCardIndexes1,
-                    playerCardIndexes2: playerCardIndexes2,
-                    dealerCardIndexes: dealerCardIndexes,
-                })
-            })
-            break;
-        case 'split':
-            room = rooms['blackjack'].find((room) => room.id === receivedData.roomId);
-            dealerCardIndexes = receivedData.dealerCardIndexes;
-            playerCardIndexes1 = receivedData.playerCardIndexes1;
-            playerCardIndexes2 = receivedData.playerCardIndexes2;
-            playerCardIndexes2.push(playerCardIndexes1[1]);
-            playerCardIndexes1.pop();
-            room.connectedPlayers.map((player) => {
-                sendData(player.id, {
-                    type: 'blackjack',
-                    instruction: 'split',
-                    roomId: room.id,
-                    player: player,
-                    playerCardIndexes1: playerCardIndexes1,
-                    playerCardIndexes2: playerCardIndexes2,
-                    dealerCardIndexes: dealerCardIndexes,
-                })
-            })
-
     }
 }
 
